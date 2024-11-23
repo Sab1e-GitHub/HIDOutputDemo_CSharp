@@ -18,6 +18,8 @@ namespace HIDOutputDemo_CSharp
     {
         private const UInt16 Vid = 0x1234;  // Vendor ID
         private const UInt16 Pid = 0x0065;  // Product ID
+        private const int reportId = 0x03;
+        private const int reportLength = 6;
         private HIDManager _hidManager;
         public MainWindow()
         {
@@ -45,7 +47,13 @@ namespace HIDOutputDemo_CSharp
         {
             if (_hidManager.IsDeviceOpened())
             {
-                if (_hidManager.SendOutputReport(0x03, [2, 1, 255, 0, 0, 0]))
+                // data to be send
+                byte[] data = new byte[reportLength];
+                for (int i = 0; i < reportLength; i++)
+                {
+                    data[i] = (byte)i;
+                }
+                if (_hidManager.SendOutputReport(reportId, data))
                 {
                     InfoBox.Text += "Output Report send successful!\n";
                 }
