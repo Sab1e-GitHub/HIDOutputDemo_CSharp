@@ -5,16 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HIDOutputDemo_CSharp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="400">
+        Title="MainWindow" Height="600" Width="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Margin="10">
-            <Button Width="120" Height="20" Content="Open Device" Margin="10" Click="OpenDevice_Click"/>
-            <Button Width="120" Height="20" Content="Send Test Data" Margin="10" Click="SendTestData_Click"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Width="120" Height="20" Content="Open Device" Margin="5" Click="OpenDevice_Click"/>
+                <Button Width="120" Height="20" Content="Send Test Data" Margin="5" Click="SendTestData_Click"/>
+                <Button Width="120" Height="20"  Content="Get All Device Info" Margin="5" Click="GetAllDeviceInfo_Click"/>
+                <Button Width="120" Height="20"  Content="Clear Info Box" Click="ClearInfoBox_Click"/>
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <TextBlock Text="VID 0x" />
+                <TextBox x:Name="VID" Text="1234" Width="60"/>
+                <TextBlock Text="PID 0x" />
+                <TextBox x:Name="PID" Text="0001" Width="60"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <TextBlock Text="Report ID 0x"/>
+                <TextBox x:Name="ReportID" Text="03" Width="60"/>
+                <TextBlock Text="Report Length (Decimal) "/>
+                <TextBox x:Name="ReportLength" Text="128" Width="60" />
+            </StackPanel>
+
         </StackPanel>
         <TextBox x:Name="InfoBox" Grid.Row="1" Height="auto" Margin="10" IsReadOnly="True"/>
+
     </Grid>
 </Window>

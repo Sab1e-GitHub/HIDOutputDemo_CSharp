@@ -16,22 +16,25 @@ namespace HIDOutputDemo_CSharp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const UInt16 Vid = 0x1234;  // Vendor ID
-        private const UInt16 Pid = 0x0065;  // Product ID
-        private const int reportId = 0x03;
-        private const int reportLength = 6;
+        private UInt16 Vid = 0x1234;  // Vendor ID
+        private UInt16 Pid = 0x0001;  // Product ID
+        private byte reportId = 0x05;
+        private int reportLength = 128;
         private HIDManager _hidManager;
         public MainWindow()
         {
             InitializeComponent();
 
-            _hidManager = new HIDManager(Vid, Pid);
+
 
             InfoBox.Text += "Hello.\n";
         }
 
         private void OpenDevice_Click(object sender, RoutedEventArgs e)
         {
+            Vid = Convert.ToUInt16(VID.Text, 16);
+            Pid = Convert.ToUInt16(PID.Text, 16);
+            _hidManager = new HIDManager(Vid, Pid);
             if (_hidManager.OpenDevice())
             {
                 InfoBox.Text += "Device successfully opened\n";
@@ -47,6 +50,9 @@ namespace HIDOutputDemo_CSharp
         {
             if (_hidManager.IsDeviceOpened())
             {
+
+                reportId = Convert.ToByte(ReportID.Text, 16);
+                reportLength = Convert.ToUInt16(ReportLength.Text);
                 // data to be send
                 byte[] data = new byte[reportLength];
                 for (int i = 0; i < reportLength; i++)
@@ -55,16 +61,38 @@ namespace HIDOutputDemo_CSharp
                 }
                 if (_hidManager.SendOutputReport(reportId, data))
                 {
-                    InfoBox.Text += "Output Report send successful!\n";
+                    InfoBox.Text += "Output Report send successful!\nSuccessfully sent data:\n";
+                    foreach (byte b in data)
+                    {
+                        InfoBox.Text += "0x" + b.ToString("X2") + " ";
+                    }
+
                 }
                 else
                 {
-                    InfoBox.Text += "Output Report send failed\n";
+                    InfoBox.Text += $"Output Report send failed\n{_hidManager.getLastError()}\n";
                 }
             }
             else
             {
-                InfoBox.Text += "The device is not opened, unable to send data\n";
+                InfoBox.Text += $"The device is not opened, unable to send data\n";
+            }
+        }
+
+        private void ClearInfoBox_Click(object sender, RoutedEventArgs e)
+        {
+            InfoBox.Text = string.Empty;
+        }
+
+        private void GetAllDeviceInfo_Click(object sender, RoutedEventArgs e)
+        {
+            if (_hidManager.IsDeviceOpened())
+            {
+                InfoBox.Text += _hidManager.GetAllDeviceInfo();
+            }
+            else
+            {
+                InfoBox.Text += $"The device is not opened, unable to send data\n";
             }
         }
     }
